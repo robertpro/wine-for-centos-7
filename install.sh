@@ -25,8 +25,8 @@ yum erase wine wine-*
 echo "Install wine building tools..." | tee -a $log
 
 yum install samba-winbind-clients -y 2>&1 >>$log
-yum groups mark install "Development Tools" -y 2>& >> $log
-yum groups mark convert "Development Tools" -y 2>& >> $log
+yum groups mark install "Development Tools" -y 2>&1 >> $log
+yum groups mark convert "Development Tools" -y 2>&1 >> $log
 yum groupinstall 'Development Tools' -y 2>&1 >> $log
 yum install libjpeg-turbo-devel libtiff-devel freetype-devel -y 2>&1 >> $log
 yum install libgcc.i686 libX11-devel.i686 freetype-devel.i686 gnutls-devel.i686 libxml2-devel.i686 libjpeg-turbo-devel.i686 libpng-devel.i686 libXrender-devel.i686 -y 2>&1 >> $log
