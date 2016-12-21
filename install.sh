@@ -13,7 +13,7 @@ log=`mktemp -t install-wine.XXXXXX.log`
 
 # Install
 
-ver=1.8.4
+ver=2.0-rc2
 
 echo "Hello there. Start to download, build and install wine $ver 32-bit and 64-bit versions..." | tee $log
 echo "Logs are in $log" | tee -a $log
@@ -25,6 +25,8 @@ yum erase wine wine-*
 echo "Install wine building tools..." | tee -a $log
 
 yum install samba-winbind-clients -y 2>&1 >>$log
+yum groups mark install "Development Tools" -y 2>& >> $log
+yum groups mark convert "Development Tools" -y 2>& >> $log
 yum groupinstall 'Development Tools' -y 2>&1 >> $log
 yum install libjpeg-turbo-devel libtiff-devel freetype-devel -y 2>&1 >> $log
 yum install libgcc.i686 libX11-devel.i686 freetype-devel.i686 gnutls-devel.i686 libxml2-devel.i686 libjpeg-turbo-devel.i686 libpng-devel.i686 libXrender-devel.i686 -y 2>&1 >> $log
@@ -32,7 +34,7 @@ yum install libgcc.i686 libX11-devel.i686 freetype-devel.i686 gnutls-devel.i686 
 echo "Download and unpack the wine source package..." 2>&1 | tee -a $log
 
 cd /usr/src 2>&1 >> $log
-wget http://dl.winehq.org/wine/source/1.8/wine-${ver}.tar.bz2 -O wine-${ver}.tar.bz2 2>&1 >> $log
+wget -c http://dl.winehq.org/wine/source/2.0/wine-${ver}.tar.bz2 -O wine-${ver}.tar.bz2 2>&1 >> $log
 tar xjf wine-${ver}.tar.bz2 2>&1 >> $log
 
 echo "Build wine..." 2>&1 | tee -a $log
@@ -41,12 +43,12 @@ mkdir -p wine32 wine64 2>&1 >> $log
 
 echo "   build wine64..." 2>&1 | tee -a $log
 cd wine64 2>&1 >> $log
-../configure --without-x --enable-win64 2>&1 >> $log
+../configure --enable-win64 2>&1 >> $log
 make -j 4 2>&1 >> $log
 
 echo "   build wine32..." 2>&1 | tee -a $log
 cd ../wine32 2>&1 >> $log
-../configure --without-x --with-wine64=../wine64 2>&1 >> $log
+../configure --with-wine64=../wine64 2>&1 >> $log
 make -j 4 2>&1 >> $log
 
 echo "Install wine..." 2>&1 | tee -a $log
@@ -61,7 +63,7 @@ echo "Congratulation! All are done. Enjoy!" 2>&1 | tee -a $log
 rm -f $log
 
 # # Uninstall
-cd /usr/src/wine-${ver}/wine32
-make uninstall
-cd /usr/src/wine-${ver}/wine64
-make uninstall
+# cd /usr/src/wine-${ver}/wine32
+# make uninstall
+# cd /usr/src/wine-${ver}/wine64
+# make uninstall
